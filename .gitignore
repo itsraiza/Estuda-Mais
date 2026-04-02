@@ -1,0 +1,32 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# Logs
+*.log
+
+# Build
+dist/
+build/
+
+# Cache
+.vite/
+.cache/
+
+# Testes
+coverage/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temporários
+*.tmp
+*.temp
