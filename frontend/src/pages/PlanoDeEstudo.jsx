@@ -19,7 +19,7 @@ const PlanoDeEstudo = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/plano", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/plano`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

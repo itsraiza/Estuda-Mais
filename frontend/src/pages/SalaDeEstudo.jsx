@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Layout from "./Layout";
 
-const Agente = () => {
+const SalaDeEstudo = () => {
   const [mensagem, setMensagem] = useState("");
   const [mensagens, setMensagens] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ const Agente = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/estudo", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/estudo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -216,4 +216,4 @@ const Agente = () => {
   );
 };
 
-export default Agente;
+export default SalaDeEstudo;

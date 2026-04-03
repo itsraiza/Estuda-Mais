@@ -11,7 +11,7 @@ import EstudoRoutes from './src/routes/EstudoRoutes.js'
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin: "*"}));
 
 app.use('/plano' , PlanoRoutes);
 app.use('/estudo', EstudoRoutes);
