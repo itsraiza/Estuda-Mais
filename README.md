@@ -36,27 +36,27 @@ A solução não apenas organiza os estudos, mas também cria um ambiente de apr
 
 ### Frontend
 
-- **React 19**: Framework JavaScript moderno para construção de interfaces de usuário reativas e componentizadas
-- **Vite**: Ferramenta de build ultrarrápida que oferece desenvolvimento instantâneo e builds otimizados
-- **Tailwind CSS**: Framework CSS utilitário que permite criar designs responsivos e modernos de forma eficiente
-- **React Router DOM**: Biblioteca para roteamento de páginas em aplicações React de página única (SPA)
-- **React Icons**: Conjunto abrangente de ícones SVG para enriquecer a interface visual
-- **JavaScript ES6+**: Utilização de recursos modernos da linguagem para código mais limpo e eficiente
+- **React 19**
+- **Vite**
+- **Tailwind CSS**
+- **React Router DOM**
+- **React Icons** 
+- **JavaScript ES6+**
 
 ### Backend
 
-- **Node.js**: Ambiente de execução JavaScript no servidor, permitindo desenvolvimento full-stack em uma única linguagem
-- **Express.js 5.2**: Framework web minimalista e flexível para Node.js, ideal para construção de APIs RESTful
-- **Nodemon**: Ferramenta que reinicia automaticamente o servidor durante o desenvolvimento, melhorando a produtividade
-- **Dotenv**: Biblioteca para gerenciamento seguro de variáveis de ambiente
-- **CORS**: Middleware para habilitar compartilhamento de recursos entre origens diferentes (cross-origin)
+- **Node.js**
+- **Express.js 5.2**
+- **Nodemon**
+- **Dotenv**
+- **CORS**
 
 ### IA/API
 
-- **Google Generative AI (Gemini)**: Modelo de linguagem avançado da Google que possibilita geração de texto inteligente e conversacional
-- **Streaming de Respostas**: Tecnologia que permite respostas em tempo real, melhorando a experiência do usuário
-- **API RESTful**: Arquitetura de comunicação padronizada entre frontend e backend
-- **Prompt Engineering**: Técnicas especializadas para criar instruções eficazes para o modelo de IA
+- **Google Generative AI (Gemini)**
+- **Streaming de Respostas**
+- **API RESTful**
+- **Prompt Engineering**
 
 ## ⚙️ Funcionalidades
 
@@ -68,12 +68,18 @@ A solução não apenas organiza os estudos, mas também cria um ambiente de apr
 - **Sugestões de vídeos**: Recomendações de conteúdo audiovisual relevante para cada tópico
 - **Flexibilidade**: Planos adaptáveis às necessidades individuais de cada estudante
 
-### 💬 Agente de Estudo Inteligente
+### 💬 Sala de Estudo Inteligente
 
-- **Chat interativo**: Interface conversacional para tirar dúvidas sobre qualquer assunto
-- **Explicações claras**: Respostas estruturadas com teoria, exemplos práticos e resumos
-- **Disponibilidade 24/7**: Suporte inteligente sempre acessível, independente do horário
-- **Contexto educacional**: Prompts especializados para respostas adequadas ao ambiente de estudo
+  - Interface conversacional dinâmica que permite:
+  - Tirar dúvidas livremente (chat)
+  - Gerar resumos sob demanda
+  - Treinar com questões (modo ativo)
+  - Enviar respostas e receber correção com explicação
+
+- Sistema com múltiplos modos de interação:
+  - Chat livre
+  - Resumo
+  - Treino + correção
 
 ### 📚 Sistema de Resumos e Sínteses
 
@@ -211,13 +217,11 @@ estuda-mais/
 │   │   ├── 📁 pages/                    # Páginas da aplicação
 │   │   │   ├── HomePage.jsx             # Página inicial
 │   │   │   ├── PlanoDeEstudo.jsx        # Página de criação de planos
-│   │   │   ├── Agente.jsx               # Página do chat com IA
+│   │   │   ├── SalaDeEstudo.jsx         # Página do chat com IA
 │   │   │   └── Layout.jsx               # Layout compartilhado
 │   │   │
 │   │   ├── 📁 assets/                   # Recursos estáticos
 │   │   │
-│   │   └── 📁 services/                 # Chamadas para API
-│   │       └── api.js                   # Funções de comunicação com backend
 │   │
 │   └── 📁 public/                       # Arquivos públicos estáticos
 │
@@ -304,15 +308,19 @@ Instale as bibliotecas do frontend:
 npm install
 ```
 
-#### 3️⃣ Verificação da configuração da API
+#### 4️⃣ Configuração das variáveis de ambiente
 
-Certifique-se de que o frontend está configurado para se comunicar com o backend. Verifique se existe um arquivo de configuração (geralmente em `src/services/api.js`) com a URL correta:
+Crie um arquivo `.env` dentro da pasta `frontend/`:
 
-```javascript
-const API_URL = "http://localhost:3000";
-```
+```env
+VITE_API_URL=https://seu-backend.onrender.com
 
-#### 4️⃣ Inicialização do servidor de desenvolvimento
+
+- Essa variável é utilizada para definir a URL da API em produção.
+
+- Em ambiente de desenvolvimento, pode ser utilizado http://localhost:3000
+
+#### 3️⃣ Inicialização do servidor de desenvolvimento
 
 Execute o comando para iniciar o frontend:
 
@@ -345,6 +353,13 @@ Se ambos os serviços estiverem rodando, você poderá utilizar todas as funcion
 ## 🔐 Variáveis de Ambiente
 
 As variáveis de ambiente são essenciais para a segurança e configuração flexível da aplicação. Elas permitem que informações sensíveis (como chaves de API) sejam mantidas fora do código fonte.
+
+### Frontend (.env)
+
+Crie um arquivo `.env` dentro da pasta `frontend/`:
+
+```env
+VITE_API_URL=https://seu-backend.onrender.com
 
 ### Backend (.env)
 
@@ -387,18 +402,6 @@ A comunicação entre frontend e backend é realizada através de uma API RESTfu
 }
 ```
 
-**Exemplo de uso com curl:**
-
-```bash
-curl -X POST http://localhost:3000/plano \
-  -H "Content-Type: application/json" \
-  -d '{
-    "goal": "Passar no ENEM",
-    "subjects": "Matemática, Português",
-    "time": "1.5 horas",
-    "level": "Iniciante"
-  }'
-```
 
 **Resposta:** Stream de texto contendo o plano estruturado dia a dia.
 
@@ -415,17 +418,6 @@ curl -X POST http://localhost:3000/plano \
   "type": "chat",
   "message": "Como calcular a área de um triângulo equilátero?"
 }
-```
-
-**Exemplo de uso com curl:**
-
-```bash
-curl -X POST http://localhost:3000/estudo \
-  -H "Content-Type: application/json" \
-  -d '{
-    "type": "chat",
-    "message": "Explique o conceito de função quadrática"
-  }'
 ```
 
 **Resposta:** Stream de texto com explicação estruturada, exemplos e resumo.
@@ -497,15 +489,20 @@ Interface dedicada à geração de planos personalizados:
 - **Área de exibição** que mostra o plano sendo gerado em streaming
 - **Layout organizado** facilitando a leitura do plano dia a dia
 
-### 🤖 Agente de Estudo (Agente)
+### 🤖 Sala de Estudos Inteligente
 
 Espaço para interação inteligente com a IA:
 
-- **Campo de input expansível** para perguntas detalhadas
-- **Histórico de conversa** mantendo o contexto das interações
-- **Respostas formatadas** com seções de explicação, exemplo e resumo
-- **Interface conversacional** simulando um chat natural
-- **Indicadores visuais** mostrando quando a IA está processando
+- **Interface conversacional dinâmica que permite**:
+  - Tirar dúvidas livremente (chat)
+  - Gerar resumos sob demanda
+  - Treinar com questões (modo ativo)
+  - Enviar respostas e receber correção com explicação
+
+- **Sistema com múltiplos modos de interação**:
+  - Chat livre
+  - Resumo
+  - Treino + correção
 
 ### 🎨 Elementos Comuns
 
@@ -516,6 +513,36 @@ Espaço para interação inteligente com a IA:
 - **Feedback visual** para todas as ações do usuário
 
 ## 🌐 Deploy
+
+A aplicação foi deployada utilizando uma arquitetura moderna com separação entre frontend e backend:
+
+### 🔹 Backend
+
+- Hospedado no **Render**
+- API Node.js com Express
+- Utiliza variáveis de ambiente para segurança
+- Pode entrar em modo "sleep" no plano gratuito (primeira requisição pode demorar)
+
+### 🔹 Frontend
+
+- Hospedado no **Vercel**
+- Build otimizado com Vite
+- Integração com backend via variável de ambiente
+
+### 🔹 Estrutura de Deploy
+
+````
+
+GitHub
+├── backend → Render
+└── frontend → Vercel
+
+````
+
+### 🔹 Acesso
+
+- Frontend: https://estudamais-liart.vercel.app/ 
+
 
 ## 📚 Aprendizados
 
