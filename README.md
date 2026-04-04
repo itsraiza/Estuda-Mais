@@ -312,13 +312,15 @@ npm install
 
 Crie um arquivo `.env` dentro da pasta `frontend/`:
 
-```env
+```
 VITE_API_URL=https://seu-backend.onrender.com
 
 
 - Essa variável é utilizada para definir a URL da API em produção.
 
 - Em ambiente de desenvolvimento, pode ser utilizado http://localhost:3000
+
+```
 
 #### 3️⃣ Inicialização do servidor de desenvolvimento
 
