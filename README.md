@@ -360,8 +360,10 @@ As variáveis de ambiente são essenciais para a segurança e configuração fle
 
 Crie um arquivo `.env` dentro da pasta `frontend/`:
 
-```env
+```
 VITE_API_URL=https://seu-backend.onrender.com
+```
+
 
 ### Backend (.env)
 
