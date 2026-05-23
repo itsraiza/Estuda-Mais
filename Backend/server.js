@@ -16,7 +16,7 @@ app.use(cors({origin: "*"}));
 
 app.use('/plano' , PlanoRoutes);
 app.use('/estudo', EstudoRoutes);
-app.use('/users/register', UserRoute)
+app.use('/users', UserRoute)
 
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000")

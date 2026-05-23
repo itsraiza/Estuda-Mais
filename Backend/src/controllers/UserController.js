@@ -59,3 +59,70 @@ export async function CreateUser (req, res) {
         
     }
 }
+
+export async function LoginUser(req, res) {
+    const {email, password} = req.body;
+
+    try {
+        
+        if (!email || !password) {
+            return res.status(401).json({
+                message: "Email e Senha são obrigatórios!"
+            });
+        }
+        
+        const {data: user, error} = await supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+        .single()
+    
+        if (!user) {
+            return res.status(401).json({
+                message: "Email ou Senha inválida"
+            })
+        }
+    
+        const isPasswordCorrect = await bcrypt.compare(
+            password,
+            user.password
+        )
+    
+        if (!isPasswordCorrect) {
+            return res.status(401).json({
+                message: "Email ou Senha inválida!"
+            })
+        }
+
+        const token = jwt.sign(
+            {
+                id: user.id,
+                email: user.email
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "4h"
+            }
+        );
+        
+        return res.status(201).json({
+            message: "Login realizado com sucesso!",
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            }
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erro interno no servidor",
+            error: error.message
+        });
+        
+    }
+
+
+
+
+}
