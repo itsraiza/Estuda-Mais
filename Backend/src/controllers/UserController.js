@@ -121,8 +121,105 @@ export async function LoginUser(req, res) {
         });
         
     }
+}
 
+export async function Getprofile(req, res) {
+    try {
 
+        const userId = req.user.id;
 
+        const { data: user, error } = await supabase
+            .from("users")
+            .select("id, name, email")
+            .eq("id", userId)
+            .single();
 
+        if (error || !user) {
+            return res.status(404).json({
+                message: "Usuário não encontrado!"
+            });
+        }
+
+        return res.status(200).json(user);
+        
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erro interno no servidor",
+            error: error.message
+        });
+    }
+}
+
+export async function UpdateUser(req, res) {
+    try {
+        
+        const userId = req.user.id;
+        const { name, email, password } = req.body;
+
+        const updateData = {};
+
+        if (name) updateData.name = name;
+        if (email) updateData.email = email;
+
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updateData.password = hashedPassword;
+        }
+
+        const { data, error } = await supabase
+        
+            .from("users")
+            .update(updateData)
+            .eq("id", userId)
+            .select("id, name, email")
+            .single();
+
+        if (error) {
+            return res.status(500).json({
+                message: "Erro ao atualizar usuário",
+                error
+            });
+        }
+
+        return res.status(200).json({
+            message: "Usuário atualizado com sucesso!",
+            user: data
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erro interno no servidor",
+            error: error.message
+        });
+    }
+}
+
+export async function DeleteUser(req, res) {
+    try {
+        
+        const userId = req.user.id;
+
+        const { error } = await supabase
+            .from("users")
+            .delete()
+            .eq("id", userId);
+
+        if (error) {
+            return res.status(500).json({
+                message: "Erro ao deletar usuário",
+                error
+            });
+        }
+
+        return res.status(200).json({
+            message: "Usuário deletado com sucesso!"
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erro interno no servidor",
+            error: error.message
+        });
+    }
+    
 }
