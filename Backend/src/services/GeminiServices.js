@@ -10,8 +10,12 @@ export async function generateStreamResponse(prompt, res) {
 
     const result = await model.generateContentStream(prompt);
 
+    let fullResponse = "";
+
     for await (const chunk of result.stream) {
       const text = chunk?.text?.();
+
+      fullResponse += text
 
       if (text) {
         res.write(text);
@@ -19,6 +23,8 @@ export async function generateStreamResponse(prompt, res) {
     }
 
     res.end();
+
+    return fullResponse;
 
   } catch (error) {
     console.error("Erro Gemini:", error);
