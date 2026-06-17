@@ -3,50 +3,99 @@ import { generateStreamResponse } from "../services/GeminiServices.js"
 import { supabase } from "../config/supabase.js";
 
 export async function Estudo(req, res) {
-    const {type, message, questoes} = req.body;
+    const {
+        type,
+        message,
+        questoes,
+        conversationId
+    } = req.body;
+
     const userId = req.user.id;
 
-    if (!type || !message) {
-        return res.status(400).json({message: 'Todos os campos são obrigatórios'});
+    if (!type || !message || !conversationId) {
+        return res.status(400).json({
+            message: "Todos os campos são obrigatórios"
+        });
     }
-    
-    try {
-        const prompt = EstudoPrompt(type, message, questoes);
 
+    try {
+
+        // verifica se a conversa existe
+        const { data: conversation, error: conversationError } =
+            await supabase
+                .from("conversations")
+                .select("id")
+                .eq("id", conversationId)
+                .eq("user_id", userId)
+                .single();
+
+        if (conversationError || !conversation) {
+            return res.status(404).json({
+                message: "Conversa não encontrada"
+            });
+        }
+
+        const prompt = EstudoPrompt(
+            type,
+            message,
+            questoes
+        );
+
+        // salva a pergunta
         const { data: savedMessage, error } = await supabase
             .from("messages")
             .insert([
                 {
-                user_id: userId,
-                type,
-                question: message,
-                },
+                    user_id: userId,
+                    conversation_id: conversationId,
+                    type,
+                    question: message
+                }
             ])
             .select()
             .single();
 
         if (error) {
-        throw error;
+            throw error;
         }
-        
-        res.setHeader("Content-Type", "text/plain");
-        res.setHeader("Transfer-Encoding", "chunked");
 
-        const aiResponse = await generateStreamResponse(prompt, res);
+        res.setHeader(
+            "Content-Type",
+            "text/plain"
+        );
 
-        const {error: updateError} = await supabase
-            .from("messages")
-            .update({
-                answer: aiResponse,
-            })
-            .eq("id", savedMessage.id);
+        res.setHeader(
+            "Transfer-Encoding",
+            "chunked"
+        );
 
+        const aiResponse =
+            await generateStreamResponse(
+                prompt,
+                res
+            );
+
+        // salva resposta da IA
+        const { error: updateError } =
+            await supabase
+                .from("messages")
+                .update({
+                    answer: aiResponse
+                })
+                .eq("id", savedMessage.id);
+
+        if (updateError) {
+            console.error(updateError);
+        }
 
     } catch (error) {
+
         console.error(error);
-        res.status(500).json({error: 'Erro na IA'});
+
+        return res.status(500).json({
+            error: "Erro na IA"
+        });
     }
-    
 }
 
 export async function GetHistory(req, res) {
